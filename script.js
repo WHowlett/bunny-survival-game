@@ -23,7 +23,7 @@ let scene3 = { //Completed game --Gameover will be design at later time//
   update: updateend
 }
 
-let scene4 = {
+let scene4 = { //Game over sence
   key: 'scene4',
   active: false,
   preload: preover,
@@ -39,12 +39,36 @@ let scene5 = { // Scene for how to play
   update: updatelearn
 }
 
-let scene6 = {
+let scene6 = { // Level 2
   key: 'scene6',
   active: false,
   preload: preload2,
   create: create2,
   update: update2
+}
+
+let scene7 = { // Level 3
+  key: 'scene7',
+  active: false,
+  preload: preload3,
+  create: create3,
+  update: update3
+}
+
+let scene8 = { // Level 4 
+  key: 'scene8',
+  active: false,
+  preload: preload4,
+  create: create4,
+  update: update4
+}
+
+let scene9 = { // Level 5 - Last
+  key: 'scene9',
+  active: false,
+  preload: preload5,
+  create: create5,
+  update: update5
 }
 
 let config = {
@@ -58,7 +82,7 @@ let config = {
       debug: false
     }
   },
-  scene: [scene1, scene2, scene3, scene4, scene5, scene6],
+  scene: [scene1, scene2, scene3, scene4, scene5, scene6, scene7],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
@@ -70,8 +94,10 @@ let mygame = new Phaser.Game( config );
 let spacebar;
 var bunny;
 var bird;
+var wolf;
 var platform;
 var banana;
+var watermelon;
 var score = 0;
 var scoreText;
 var death;
@@ -79,6 +105,7 @@ var opentune;//opening sound
 var hopping//Sound for hopping
 var eat; //Sound for eating
 var birdCry; //Bird Cry
+var woldHowl; // Wolf Howl
 var gamesound; //background music to play during the game
 var lostsound; // losing sound
 var winnersound;
@@ -295,7 +322,6 @@ function collectFruit (bunny, star)
   
   
 };
-
 function myupdate1() {
   if (cursors.left.isDown)
 {
@@ -329,7 +355,7 @@ if (cursors.up.isDown && bunny.body.touching.down)
 
   
 };
-
+//End Level 2
 
 //Level 2
 function preload2() {
@@ -454,8 +480,8 @@ function collectFruit (bunny, star)
         })
 
     }
-  if (score === 1000){
-    this.scene.start('scene3');
+  if (score === 20){
+    this.scene.start('scene7');
     gamesound.pause();
   }
 }
@@ -491,10 +517,245 @@ if (cursors.up.isDown && bunny.body.touching.down)
 //End level 2
 
 //Start Level 3
+function preload3() {
+  this.load.image('background3', 'asset/level3.jpg');
+  this.load.image('snowground', 'asset/snow-platform.png');
+  this.load.image('melon', 'asset/watermelon.png');
+  this.load.image('fox', 'asset/fox-redo.png');
+  this.load.spritesheet('brownbunny', 
+        'asset/bunny-hop-spritesheet.png',
+        { frameWidth: 48, frameHeight: 32 }
+    );
+  this.load.audio('hop', 'sound/hop.wav');
+  this.load.audio('eat', 'sound/crunch.ogg');
+  this.load.audio('howl', 'sound/howl.wav');
+}
+function create3() {
+    this.add.image(500, 400, 'background3');
+  opentune.pause();
+  platforms = this.physics.add.staticGroup();
 
+  platforms.create(75, 785, 'snowground');
+  platforms.create(175, 785, 'snowground');
+  platforms.create(275, 785, 'snowground');
+  platforms.create(375, 785, 'snowground');
+  platforms.create(475, 785, 'snowground');
+  platforms.create(575, 785, 'snowground');
+  platforms.create(675, 785, 'snowground');
+  platforms.create(775, 785, 'snowground');
+  platforms.create(875, 785, 'snowground');
+  platforms.create(975, 785, 'snowground'); 
+  platforms.create(500, 400, 'snowground');
+  platforms.create(220, 600, 'snowground');
+  platforms.create(90, 200, 'snowground');
+  platforms.create(1000, 350, 'snowground');
+  platforms.create(700, 600, 'snowground');
+  hopping = this.sound.add('hop');
+  eat = this.sound.add('eat');
+  bunny = this.physics.add.sprite(250, 600, 'brownbunny');
+  wolfHowl = this.sound.add('howl');
+
+  bunny.setBounce(0.2);
+  bunny.setCollideWorldBounds(true);
+  //Bunny movement
+  this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('brownbunny', { start: 0, end: 3 }),
+    frameRate: 10,
+    repeat: -1
+});
+
+this.anims.create({
+    key: 'turn',
+    frames: [ { key: 'brownbunny', frame: 4 } ],
+    frameRate: 20
+});
+
+this.anims.create({
+    key: 'right',
+    frames: this.anims.generateFrameNumbers('brownbunny', { start: 4, end: 7 }),
+    frameRate: 10,
+    repeat: -1
+});
+
+  this.physics.add.collider(bunny, platforms);
+
+  cursors = this.input.keyboard.createCursorKeys();
+
+watermelon = this.physics.add.group({
+    key: 'melon',
+    repeat: 9,
+    setXY: { x: 25, y: 0, stepX: 105 }
+});
+
+watermelon.children.iterate(function (child) {
+
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+});
+this.physics.add.collider(watermelon, platforms);
+
+this.physics.add.overlap(bunny, watermelon, collectFruit, null, this);
+
+scoreText = this.add.text(750, 16, 'score: 0', { fontSize: '38px', fill: '#000', strokeThickness: 5 });
+
+wolf = this.physics.add.group();
+
+this.physics.add.collider(wolf, platforms);
+
+this.physics.add.collider(bunny, wolf, hitBunny, null, this);
+
+  function hitBunny (bunny, wolf)
+{
+  this.physics.pause();
+  //console.log('game over');
+  this.scene.start('scene4');
+  gamesound.pause();
+}
+  
+
+function collectFruit (bunny, star)
+{
+    star.disableBody(true, true);
+    eat.play({
+      volume: 2,
+      loop: false,
+    })
+    //  Add and update the score
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    if (watermelon.countActive(true) === 0)
+    {
+        //  A new batch of stars to collect
+        watermelon.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        var x = (bunny.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var wolfs = wolf.create(x, 400, 'fox');
+        wolfs.setBounce(1);
+        wolfs.setCollideWorldBounds(true);
+        wolfs.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        wolfs.allowGravity = true;
+        wolfHowl.play({
+          volume: 1,
+          loop: false
+        })
+
+    }
+  if (score === 1000){
+    this.scene.start('scene7');
+    gamesound.pause();
+  }
+}
+}
+function update3() {
+    if (cursors.left.isDown)
+{
+    bunny.setVelocityX(-160);
+
+    bunny.anims.play('left', true);
+  hopping.play();
+}
+else if (cursors.right.isDown)
+{
+    bunny.setVelocityX(160);
+
+    bunny.anims.play('right', true);
+  hopping.play();
+}
+else
+{
+    bunny.setVelocityX(0);
+
+    bunny.anims.play('turn');
+  hopping.play();
+}
+
+if (cursors.up.isDown && bunny.body.touching.down)
+{
+    bunny.setVelocityY(-330);
+}
+}
 //End Level 3
 
+//Level 4
+function preload4() {
+  
+}
+function create4() {
+  
+}
+function update4() {
+    if (cursors.left.isDown)
+{
+    bunny.setVelocityX(-160);
 
+    bunny.anims.play('left', true);
+  hopping.play();
+}
+else if (cursors.right.isDown)
+{
+    bunny.setVelocityX(160);
+
+    bunny.anims.play('right', true);
+  hopping.play();
+}
+else
+{
+    bunny.setVelocityX(0);
+
+    bunny.anims.play('turn');
+  hopping.play();
+}
+
+if (cursors.up.isDown && bunny.body.touching.down)
+{
+    bunny.setVelocityY(-330);
+}
+}
+//End level 4
+
+//Start 5 - Final Level
+function preload5() {
+  
+}
+function create5() {
+  
+}
+function update5() {
+    if (cursors.left.isDown)
+{
+    bunny.setVelocityX(-160);
+
+    bunny.anims.play('left', true);
+  hopping.play();
+}
+else if (cursors.right.isDown)
+{
+    bunny.setVelocityX(160);
+
+    bunny.anims.play('right', true);
+  hopping.play();
+}
+else
+{
+    bunny.setVelocityX(0);
+
+    bunny.anims.play('turn');
+  hopping.play();
+}
+
+if (cursors.up.isDown && bunny.body.touching.down)
+{
+    bunny.setVelocityY(-330);
+}
+}
+//End Level 5 -- Try to win the game please.
 
 
 //Winner Scene
