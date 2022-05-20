@@ -199,7 +199,6 @@ function mycreate1() {
 
   bunny.setBounce(0.2);
   bunny.setCollideWorldBounds(true);
-  //Bunny movement
   this.anims.create({
     key: 'left',
     frames: this.anims.generateFrameNumbers('brownbunny', { start: 0, end: 3 }),
@@ -289,7 +288,7 @@ function collectFruit (bunny, star)
         })
 
     }
-  if (score === 500){
+  if (score === 10){
     this.scene.start('scene6');
   }
 }
@@ -324,7 +323,7 @@ if (cursors.up.isDown && bunny.body.touching.down)
 {
     bunny.setVelocityY(-330);
 }
-
+//End level 1
 
 
 
@@ -334,7 +333,7 @@ if (cursors.up.isDown && bunny.body.touching.down)
 
 //Level 2
 function preload2() {
-  this.load.image('background2', 'asset/level2.png');
+  this.load.image('background2', 'asset/level2.jpg');
   this.load.image('ground', 'asset/platform2.png');
   this.load.image('fruit', 'asset/logo1.png');
   this.load.image('hunter', 'asset/bird.png');
@@ -489,6 +488,13 @@ if (cursors.up.isDown && bunny.body.touching.down)
     bunny.setVelocityY(-330);
 }
 }
+//End level 2
+
+//Start Level 3
+
+//End Level 3
+
+
 
 
 //Winner Scene
