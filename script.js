@@ -15,7 +15,7 @@ let scene2 = {
   update: myupdate1,
 }
 
-let scene3 = { //Completed game --Gameover will be design at later time//
+let scene3 = { //Completed game 
   key: 'scene3',
   active: false,
   preload: preend,
@@ -82,7 +82,7 @@ let config = {
       debug: false
     }
   },
-  scene: [scene1, scene2, scene3, scene4, scene5, scene6, scene7],
+  scene: [scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
@@ -97,6 +97,7 @@ var bird;
 var wolf;
 var platform;
 var banana;
+var carrot;
 var watermelon;
 var score = 0;
 var scoreText;
@@ -170,7 +171,7 @@ function updatelearn() {
     StartGame(this);
   }
 
-  let helptext = this.add.text( 500, 765, ['Press spacebar to start.', ''], 
+  let helptext = this.add.text( 550, 490, ['Press spacebar to start.', ''], 
     { 
       fontFamily: '"Press Start 2P",cursive', 
       fontSize: '24px',
@@ -226,6 +227,18 @@ function mycreate1() {
 
   bunny.setBounce(0.2);
   bunny.setCollideWorldBounds(true);
+
+let leveltext1 = this.add.text( 500, 50, ['LEVEL 1'], 
+    { 
+      fontFamily: '"Press Start 2P",cursive', 
+      fontSize: '55px',
+      color: '#fff',
+      align: 'center',
+      strokeThickness: 2
+    }
+  ); 
+  leveltext1.setOrigin(0.5,0.5);
+  
   this.anims.create({
     key: 'left',
     frames: this.anims.generateFrameNumbers('brownbunny', { start: 0, end: 3 }),
@@ -315,7 +328,7 @@ function collectFruit (bunny, star)
         })
 
     }
-  if (score === 10){
+  if (score === 500){
     this.scene.start('scene6');
   }
 }
@@ -390,6 +403,17 @@ function create2() {
 
   bunny.setBounce(0.2);
   bunny.setCollideWorldBounds(true);
+let leveltext2 = this.add.text( 500, 50, ['LEVEL 2'], 
+    { 
+      fontFamily: '"Press Start 2P",cursive', 
+      fontSize: '55px',
+      color: '#fff',
+      align: 'center',
+      strokeThickness: 2
+    }
+  ); 
+  leveltext2.setOrigin(0.5,0.5);
+  
   //Bunny movement
   this.anims.create({
     key: 'left',
@@ -480,9 +504,8 @@ function collectFruit (bunny, star)
         })
 
     }
-  if (score === 20){
+  if (score === 1000){
     this.scene.start('scene7');
-    gamesound.pause();
   }
 }
 };
@@ -557,6 +580,16 @@ function create3() {
 
   bunny.setBounce(0.2);
   bunny.setCollideWorldBounds(true);
+  let leveltext3 = this.add.text( 500, 50, ['LEVEL 3'], 
+    { 
+      fontFamily: '"Press Start 2P",cursive', 
+      fontSize: '55px',
+      color: '#fff',
+      align: 'center',
+      strokeThickness: 3
+    }
+  ); 
+  leveltext1.setOrigin(0.5,0.5);
   //Bunny movement
   this.anims.create({
     key: 'left',
@@ -647,9 +680,8 @@ function collectFruit (bunny, star)
         })
 
     }
-  if (score === 1000){
-    this.scene.start('scene7');
-    gamesound.pause();
+  if (score === 1500){
+    this.scene.start('scene8');
   }
 }
 }
@@ -685,10 +717,139 @@ if (cursors.up.isDown && bunny.body.touching.down)
 
 //Level 4
 function preload4() {
-  
+    this.load.image('background4', 'asset/level4.jpg');
+  this.load.image('darkplatform', 'asset/dark-platform.png');
+  this.load.image('melon', 'asset/watermelon.png');
+  this.load.image('fox', 'asset/fox-redo.png');
+  this.load.spritesheet('brownbunny', 
+        'asset/bunny-hop-spritesheet.png',
+        { frameWidth: 48, frameHeight: 32 }
+    );
+  this.load.audio('hop', 'sound/hop.wav');
+  this.load.audio('eat', 'sound/crunch.ogg');
+  this.load.audio('howl', 'sound/howl.wav');
 }
 function create4() {
+      this.add.image(500, 400, 'background4');
+  opentune.pause();
+  platforms = this.physics.add.staticGroup();
+
+  platforms.create(490, 825, 'darkplatform').setScale(4).refreshBody(); 
+  platforms.create(500, 400, 'darkplatform');
+  platforms.create(220, 600, 'darkplatform');
+  platforms.create(90, 200, 'darkplatform');
+  platforms.create(1000, 350, 'darkplatform');
+  hopping = this.sound.add('hop');
+  eat = this.sound.add('eat');
+  bunny = this.physics.add.sprite(250, 600, 'brownbunny');
+  wolfHowl = this.sound.add('howl');
+
+  bunny.setBounce(0.2);
+  bunny.setCollideWorldBounds(true);
+  let leveltext4 = this.add.text( 500, 50, ['LEVEL 4'], 
+    { 
+      fontFamily: '"Press Start 2P",cursive', 
+      fontSize: '55px',
+      color: '#fff',
+      align: 'center',
+      strokeThickness: 2
+    }
+  ); 
+  leveltext4.setOrigin(0.5,0.5);
+  //Bunny movement
+  this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('brownbunny', { start: 0, end: 3 }),
+    frameRate: 10,
+    repeat: -1
+});
+
+this.anims.create({
+    key: 'turn',
+    frames: [ { key: 'brownbunny', frame: 4 } ],
+    frameRate: 20
+});
+
+this.anims.create({
+    key: 'right',
+    frames: this.anims.generateFrameNumbers('brownbunny', { start: 4, end: 7 }),
+    frameRate: 10,
+    repeat: -1
+});
+
+  this.physics.add.collider(bunny, platforms);
+
+  cursors = this.input.keyboard.createCursorKeys();
+
+watermelon = this.physics.add.group({
+    key: 'melon',
+    repeat: 7,
+    setXY: { x: 25, y: 0, stepX: 125 }
+});
+
+watermelon.children.iterate(function (child) {
+
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+});
+this.physics.add.collider(watermelon, platforms);
+
+this.physics.add.overlap(bunny, watermelon, collectFruit, null, this);
+
+scoreText = this.add.text(750, 16, 'score: 0', { fontSize: '38px', fill: '#000', strokeThickness: 5 });
+
+wolf = this.physics.add.group();
+
+this.physics.add.collider(wolf, platforms);
+
+this.physics.add.collider(bunny, wolf, hitBunny, null, this);
+
+  function hitBunny (bunny, wolf)
+{
+  this.physics.pause();
+  //console.log('game over');
+  this.scene.start('scene4');
+  gamesound.pause();
+}
   
+
+function collectFruit (bunny, star)
+{
+    star.disableBody(true, true);
+    eat.play({
+      volume: 2,
+      loop: false,
+    })
+    //  Add and update the score
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    if (watermelon.countActive(true) === 0)
+    {
+        //  A new batch of stars to collect
+        watermelon.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        var x = (bunny.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var wolfs = wolf.create(x, 400, 'fox');
+        wolfs.setBounce(1);
+        wolfs.setCollideWorldBounds(true);
+        wolfs.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        wolfs.allowGravity = true;
+        wolfHowl.play({
+          volume: 1,
+          loop: false
+        })
+
+    }
+  if (score === 2000){
+    this.scene.start('scene9');
+  }
+}
 }
 function update4() {
     if (cursors.left.isDown)
@@ -722,11 +883,146 @@ if (cursors.up.isDown && bunny.body.touching.down)
 
 //Start 5 - Final Level
 function preload5() {
+  this.load.image('background5', 'asset/level5.jpg');
+  this.load.image('darkplatform', 'asset/dark-platform.png');
+  this.load.image('carrot', 'asset/carrot.png');
+  this.load.image('hunter', 'asset/bird.png');
+  this.load.spritesheet('brownbunny', 
+        'asset/bunny-hop-spritesheet.png',
+        { frameWidth: 48, frameHeight: 32 }
+    );
+  this.load.audio('hop', 'sound/hop.wav');
+  this.load.audio('eat', 'sound/crunch.ogg');
+  this.load.audio('cry', 'sound/cry.wav');
+  this.load.audio('music', 'sound/gameplay.mp3');
+
   
-}
+};
 function create5() {
+
+  this.add.image(500, 400, 'background5');
   
+  platforms = this.physics.add.staticGroup();
+
+  platforms.create(490, 825, 'darkplatform').setScale(4).refreshBody();
+  platforms.create(200, 350, 'darkplatform');
+  platforms.create(500, 500, 'darkplatform');
+  platforms.create(750, 700, 'darkplatform');
+  platforms.create(1030, 350, 'darkplatform');
+  
+  hopping = this.sound.add('hop');
+  eat = this.sound.add('eat');
+  bunny = this.physics.add.sprite(250, 600, 'brownbunny');
+  birdcry = this.sound.add('cry');
+
+  bunny.setBounce(0.2);
+  bunny.setCollideWorldBounds(true);
+  let leveltext5 = this.add.text( 500, 50, ['LEVEL 5'], 
+    { 
+      fontFamily: '"Press Start 2P",cursive', 
+      fontSize: '55px',
+      color: '#fff',
+      align: 'center',
+      strokeThickness: 2
+    }
+  ); 
+  leveltext5.setOrigin(0.5,0.5);
+  this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('brownbunny', { start: 0, end: 3 }),
+    frameRate: 10,
+    repeat: -1
+});
+
+this.anims.create({
+    key: 'turn',
+    frames: [ { key: 'brownbunny', frame: 4 } ],
+    frameRate: 20
+});
+
+this.anims.create({
+    key: 'right',
+    frames: this.anims.generateFrameNumbers('brownbunny', { start: 4, end: 7 }),
+    frameRate: 10,
+    repeat: -1
+});
+
+  this.physics.add.collider(bunny, platforms);
+
+  cursors = this.input.keyboard.createCursorKeys();
+
+carrot = this.physics.add.group({
+    key: 'carrot',
+    repeat: 13,
+    setXY: { x: 17, y: 0, stepX: 70 }
+});
+
+carrot.children.iterate(function (child) {
+
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+});
+this.physics.add.collider(carrot, platforms);
+
+this.physics.add.overlap(bunny, carrot, collectFruit, null, this);
+
+scoreText = this.add.text(750, 16, 'score: 0', { fontSize: '38px', fill: '#000', strokeThickness: 5 });
+
+bird = this.physics.add.group();
+
+this.physics.add.collider(bird, platforms);
+
+this.physics.add.collider(bunny, bird, hitBunny, null, this);
+
+
+  function hitBunny (bunny, bird)
+{
+  this.physics.pause();
+  //console.log('game over');
+  this.scene.start('scene4');
+  gamesound.pause();
 }
+
+function collectFruit (bunny, star)
+{
+    star.disableBody(true, true);
+    eat.play({
+      volume: 2,
+      loop: false,
+    })
+    //  Add and update the score
+    score += 10;
+    scoreText.setText('Score: ' + score);
+
+    if (carrot.countActive(true) === 0)
+    {
+        //  A new batch of stars to collect
+        carrot.children.iterate(function (child) {
+
+            child.enableBody(true, child.x, 0, true, true);
+
+        });
+
+        var x = (bunny.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+        var birds = bird.create(x, 16, 'hunter');
+        birds.setBounce(1);
+        birds.setCollideWorldBounds(true);
+        birds.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        birds.allowGravity = false;
+        birdcry.play({
+          volume: 1,
+          loop: false
+        });
+      
+
+    }
+  if (score === 2500){
+    this.scene.start('scene3');
+    gamesound.pause();
+  }
+}
+};
 function update5() {
     if (cursors.left.isDown)
 {
